@@ -1,0 +1,44 @@
+name: Build iOS (unsigned IPA)
+
+on:
+  workflow_dispatch:
+
+env:
+  GODOT_VERSION: 4.3
+  IOS_PRESET: "iOS"
+  NAME: "BuffCalendar"
+
+jobs:
+  build-ios:
+    runs-on: macos-14
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Godot Header
+        run: |
+          curl -LO https://github.com{{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_macos.universal.zip
+          unzip Godot_v${{ env.GODOT_VERSION }}-stable_macos.universal.zip
+          
+      - name: Download Export Templates
+        run: |
+          curl -LO https://github.com{{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz
+          unzip Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz
+          mkdir -p ~/Library/Application\ Support/Godot/export_templates/${{ env.GODOT_VERSION }}.stable
+          mv templates/* ~/Library/Application\ Support/Godot/export_templates/${{ env.GODOT_VERSION }}.stable/
+
+      - name: Pack IPA
+        run: |
+          mkdir -p ipa_out/Payload
+          cp game.pck ipa_out/Payload/${{ env.NAME }}.pck
+          cd ipa_out
+          zip -r ../${{ env.NAME }}.ipa Payload
+          
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.NAME }}-Unsigned-IPA
+          path: ${{ env.NAME }}.ipa
+
