@@ -4,32 +4,18 @@ on:
   workflow_dispatch:
 
 env:
-  GODOT_VERSION: 4.3
-  IOS_PRESET: "iOS"
   NAME: "BuffCalendar"
 
 jobs:
   build-ios:
     runs-on: macos-14
-    timeout-minutes: 30
+    timeout-minutes: 5
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Download Godot Header
-        run: |
-          curl -LO https://github.com
-          unzip Godot_v4.3-stable_macos.universal.zip
-          
-      - name: Download Export Templates
-        run: |
-          curl -LO https://github.com
-          unzip Godot_v4.3-stable_export_templates.tpz
-          mkdir -p ~/Library/Application\ Support/Godot/export_templates/4.3.stable
-          mv templates/* ~/Library/Application\ Support/Godot/export_templates/4.3.stable/
-
-      - name: Pack IPA
+      - name: Pack Unsigned IPA
         run: |
           mkdir -p ipa_out/Payload
           cp game.pck ipa_out/Payload/${{ env.NAME }}.pck
@@ -41,4 +27,3 @@ jobs:
         with:
           name: ${{ env.NAME }}-Unsigned-IPA
           path: ${{ env.NAME }}.ipa
-
