@@ -19,15 +19,15 @@ jobs:
 
       - name: Download Godot Header
         run: |
-          curl -LO https://github.com{{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_macos.universal.zip
-          unzip Godot_v${{ env.GODOT_VERSION }}-stable_macos.universal.zip
+          curl -LO https://github.com
+          unzip Godot_v4.3-stable_macos.universal.zip
           
       - name: Download Export Templates
         run: |
-          curl -LO https://github.com{{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz
-          unzip Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz
-          mkdir -p ~/Library/Application\ Support/Godot/export_templates/${{ env.GODOT_VERSION }}.stable
-          mv templates/* ~/Library/Application\ Support/Godot/export_templates/${{ env.GODOT_VERSION }}.stable/
+          curl -LO https://github.com
+          unzip Godot_v4.3-stable_export_templates.tpz
+          mkdir -p ~/Library/Application\ Support/Godot/export_templates/4.3.stable
+          mv templates/* ~/Library/Application\ Support/Godot/export_templates/4.3.stable/
 
       - name: Pack IPA
         run: |
