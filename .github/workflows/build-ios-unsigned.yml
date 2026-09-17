@@ -21,4 +21,3 @@ jobs:
         cp BuffCalendar_iOS.pck ipa_out/Payload/${{ env.NAME }}.pck
         cd ipa_out
         zip -r ../${{ env.NAME }}.ipa Payload
-
