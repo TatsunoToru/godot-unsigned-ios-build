@@ -21,3 +21,8 @@ jobs:
           cp BuffCalendar_iOS.pck ipa_out/Payload/${{ env.NAME }}.pck
           cd ipa_out
           zip -r ../${{ env.NAME }}.ipa Payload
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.NAME }}-ios-ipa
+          path: ${{ env.NAME }}.ipa
