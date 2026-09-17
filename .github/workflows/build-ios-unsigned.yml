@@ -5,11 +5,12 @@ on:
 
 env:
   NAME: "BuffCalendar"
+  GODOT_VERSION: "4.3"
 
 jobs:
   build-all:
     runs-on: macos-14
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
       - name: Checkout Code
@@ -21,11 +22,16 @@ jobs:
           cp game.pck ipa_out/Payload/${{ env.NAME }}.pck
           cd ipa_out
           zip -r ../${{ env.NAME }}.ipa Payload
-          
-      - name: Pack Android APK
+
+      - name: Download Android Template & Pack APK
         run: |
-          # В Андроиде логика та же — pck файл просто переименовывается в .apk
-          cp game.pck ${{ env.NAME }}.apk
+          # Скачиваем официальный пустой APK-скелет от разработчиков Godot
+          curl -LO https://github.com{{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz
+          unzip Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz
+          
+          # Зашиваем твой game.pck внутрь Андроида по правилам системы безопасности
+          cp templates/android_release.apk ${{ env.NAME }}.apk
+          zip -u ${{ env.NAME }}.apk game.pck
 
       - name: Upload iOS IPA Artifact
         uses: actions/upload-artifact@v4
@@ -38,3 +44,4 @@ jobs:
         with:
           name: ${{ env.NAME }}-Android-APK
           path: ${{ env.NAME }}.apk
+
