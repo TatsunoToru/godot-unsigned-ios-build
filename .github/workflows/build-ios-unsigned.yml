@@ -9,7 +9,7 @@ env:
 jobs:
   build-all:
     runs-on: macos-14
-    timeout-minutes: 10
+    timeout-minutes: 5
 
     steps:
       - name: Checkout Code
@@ -22,18 +22,26 @@ jobs:
           cd ipa_out
           zip -r ../${{ env.NAME }}.ipa Payload
 
-      - name: Download Android Template & Pack APK
+      - name: Pack Android APK
         run: |
-          curl -LO https://github.com
-          unzip Godot_v4.3-stable_export_templates.tpz
-          cp templates/android_release.apk BuffCalendar.apk
-          zip -u BuffCalendar.apk game.pck
+          # Собираем правильную структуру папок для Android без скачивания шаблонов
+          mkdir -p apk_out/assets
+          cp game.pck apk_out/assets/game.pck
+          cd apk_out
+          zip -r ../${{ env.NAME }}.apk assets
 
       - name: Upload iOS IPA Artifact
         uses: actions/upload-artifact@v4
         with:
           name: BuffCalendar-iOS-IPA
           path: BuffCalendar.ipa
+
+      - name: Upload Android APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: BuffCalendar-Android-APK
+          path: BuffCalendar.apk
+
 
       - name: Upload Android APK Artifact
         uses: actions/upload-artifact@v4
