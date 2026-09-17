@@ -5,7 +5,6 @@ on:
 
 env:
   NAME: "BuffCalendar"
-  GODOT_VERSION: "4.3"
 
 jobs:
   build-all:
@@ -25,23 +24,20 @@ jobs:
 
       - name: Download Android Template & Pack APK
         run: |
-          # Скачиваем официальный пустой APK-скелет от разработчиков Godot
-          curl -LO https://github.com{{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz
-          unzip Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz
-          
-          # Зашиваем твой game.pck внутрь Андроида по правилам системы безопасности
-          cp templates/android_release.apk ${{ env.NAME }}.apk
-          zip -u ${{ env.NAME }}.apk game.pck
+          curl -LO https://github.com
+          unzip Godot_v4.3-stable_export_templates.tpz
+          cp templates/android_release.apk BuffCalendar.apk
+          zip -u BuffCalendar.apk game.pck
 
       - name: Upload iOS IPA Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.NAME }}-iOS-IPA
-          path: ${{ env.NAME }}.ipa
+          name: BuffCalendar-iOS-IPA
+          path: BuffCalendar.ipa
 
       - name: Upload Android APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.NAME }}-Android-APK
-          path: ${{ env.NAME }}.apk
+          name: BuffCalendar-Android-APK
+          path: BuffCalendar.apk
 
