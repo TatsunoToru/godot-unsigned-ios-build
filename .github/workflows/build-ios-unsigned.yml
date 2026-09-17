@@ -1,4 +1,4 @@
-name: Build iOS (unsigned IPA)
+name: Build Mobile Apps (Android APK & iOS IPA)
 
 on:
   workflow_dispatch:
@@ -7,23 +7,34 @@ env:
   NAME: "BuffCalendar"
 
 jobs:
-  build-ios:
+  build-all:
     runs-on: macos-14
     timeout-minutes: 5
 
     steps:
-      - name: Checkout
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Pack Unsigned IPA
+      - name: Pack Unsigned iOS IPA
         run: |
           mkdir -p ipa_out/Payload
           cp game.pck ipa_out/Payload/${{ env.NAME }}.pck
           cd ipa_out
           zip -r ../${{ env.NAME }}.ipa Payload
           
-      - name: Upload Artifact
+      - name: Pack Android APK
+        run: |
+          # В Андроиде логика та же — pck файл просто переименовывается в .apk
+          cp game.pck ${{ env.NAME }}.apk
+
+      - name: Upload iOS IPA Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.NAME }}-Unsigned-IPA
+          name: ${{ env.NAME }}-iOS-IPA
           path: ${{ env.NAME }}.ipa
+
+      - name: Upload Android APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.NAME }}-Android-APK
+          path: ${{ env.NAME }}.apk
