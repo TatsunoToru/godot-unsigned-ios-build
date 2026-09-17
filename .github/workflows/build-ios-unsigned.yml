@@ -16,8 +16,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Pack Unsigned iOS IPA
-      run: |
-        mkdir -p ipa_out/Payload
-        cp BuffCalendar_iOS.pck ipa_out/Payload/${{ env.NAME }}.pck
-        cd ipa_out
-        zip -r ../${{ env.NAME }}.ipa Payload
+        run: |
+          mkdir -p ipa_out/Payload
+          cp BuffCalendar_iOS.pck ipa_out/Payload/${{ env.NAME }}.pck
+          cd ipa_out
+          zip -r ../${{ env.NAME }}.ipa Payload
